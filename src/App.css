@@ -85,4 +85,53 @@ form button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(211, 84, 0, 0.4);
 }
+/* Uploaded Files Section Styling */
+.uploaded-files-container {
+  margin-top: 40px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.files-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 15px;
+}
+
+.files-table th,
+.files-table td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.files-table th {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.files-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.files-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.files-table a {
+  background-color: #e67e22;
+  color: white;
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.files-table a:hover {
+  background-color: #d35400;
+}
+
 
