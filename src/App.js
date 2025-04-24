@@ -9,14 +9,15 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="page-layout">
         <Header />
-        
+
         <main style={{ padding: '20px', minHeight: '80vh' }}>
-          <Routes>
-            <Route path="/" element={<UploadForm />} />
-            <Route path="/files" element={<UploadedFilesList />} />
-          </Routes>
+          <div className="App">
+            <Routes>
+              <Route path="/" element={<UploadForm />} />
+              <Route path="/files" element={<UploadedFilesList />} />
+            </Routes></div>
         </main>
 
         <Footer />
