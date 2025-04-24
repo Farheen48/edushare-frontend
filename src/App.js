@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import UploadForm from './UploadedFiles';
-import UploadedFiles from './UploadedFiles';
+import UploadForm from './UploadedFiles';           //  upload form
+import UploadedFilesList from './UploadedFilesList'; //  file list view
 import './App.css';
 
 function App() {
@@ -8,27 +8,22 @@ function App() {
 
   return (
     <div className="App">
-      <div className="tab-buttons">
-        <button
-          className={activeTab === 'upload' ? 'active' : ''}
-          onClick={() => setActiveTab('upload')}
-        >
-          Upload
+      <h1>EduShare File Upload</h1>
+
+      <div className="tab-buttons" style={{ marginBottom: '20px' }}>
+        <button onClick={() => setActiveTab('upload')} style={{ marginRight: '10px' }}>
+          Upload File
         </button>
-        <button
-          className={activeTab === 'browse' ? 'active' : ''}
-          onClick={() => setActiveTab('browse')}
-        >
-          Browse
+        <button onClick={() => setActiveTab('list')}>
+          View Uploaded Files
         </button>
       </div>
 
       <div className="tab-content">
-        {activeTab === 'upload' ? <UploadForm /> : <UploadedFiles />}
+        {activeTab === 'upload' ? <UploadForm /> : <UploadedFilesList />}
       </div>
     </div>
   );
 }
 
 export default App;
-
