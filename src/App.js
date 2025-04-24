@@ -1,28 +1,27 @@
-import React, { useState } from 'react';
-import UploadForm from './UploadedFiles';           //  upload form
-import UploadedFilesList from './UploadedFilesList'; //  file list view
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UploadForm from './UploadedFiles';
+import UploadedFilesList from './UploadedFilesList';
+import Header from './Header';
+import Footer from './Footer';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('upload');
-
   return (
-    <div className="App">
-      <h1>EduShare File Upload</h1>
+    <Router>
+      <div className="App">
+        <Header />
+        
+        <main style={{ padding: '20px', minHeight: '80vh' }}>
+          <Routes>
+            <Route path="/" element={<UploadForm />} />
+            <Route path="/files" element={<UploadedFilesList />} />
+          </Routes>
+        </main>
 
-      <div className="tab-buttons" style={{ marginBottom: '20px' }}>
-        <button onClick={() => setActiveTab('upload')} style={{ marginRight: '10px' }}>
-          Upload File
-        </button>
-        <button onClick={() => setActiveTab('list')}>
-          View Uploaded Files
-        </button>
+        <Footer />
       </div>
-
-      <div className="tab-content">
-        {activeTab === 'upload' ? <UploadForm /> : <UploadedFilesList />}
-      </div>
-    </div>
+    </Router>
   );
 }
 
