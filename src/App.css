@@ -1,14 +1,36 @@
 /* Global page background */
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-image: url('https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1950&q=80');
+  font-family: Arial, sans-serif;
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+  /* background-image: url('https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1950&q=80'); */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   min-height: 100vh;
   position: relative;
+}
+
+.header {
+  background: #1e3a8a;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.footer {
+  background: #f1f1f1;
+  text-align: center;
+  padding: 1rem;
 }
 
 /* Custom UIU Logo – JPG version */
@@ -19,7 +41,6 @@ body::before {
   right: 130px;
   width: 200px;
   height: 200px;
-  background-image: url('./uiu-custom-logo.jpg'); /* your logo file should be renamed and placed in src */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -134,4 +155,21 @@ form button:hover {
   background-color: #d35400;
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
 
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-area {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
