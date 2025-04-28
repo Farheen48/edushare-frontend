@@ -1,12 +1,7 @@
-
 import UploadFormValidated from './UploadFormValidated';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import UploadForm from './UploadedFiles';
-
 import UploadedFilesList from './UploadedFilesList';
 import Header from './Header';
 import Footer from './Footer';
