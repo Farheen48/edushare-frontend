@@ -173,6 +173,7 @@ html, body, #root {
   align-items: flex-start;
   padding: 20px;
 }
+<<<<<<< HEAD
 /* Styling the upload form */
 .upload-form {
   max-width: 500px;
@@ -225,3 +226,5 @@ html, body, #root {
   margin-bottom: 10px;
   text-align: left;
 }
+=======
+>>>>>>> bfeee46beef3ec64692fdc0efbf7b0c77efc712e
