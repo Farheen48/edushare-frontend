@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import './App.css'; // Use your existing CSS
+import './App.css';
 
 function FormValidation() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const [fileCount, setFileCount] = useState(0);
+
+  // Fetch file count from server
+  useEffect(() => {
+    const fetchFileCount = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/files/count');
+        const data = await response.json();
+        setFileCount(data.count);
+      } catch (err) {
+        console.error('Error fetching file count:', err);
+      }
+    };
+    fetchFileCount();
+  }, []);
 
   const onSubmit = async (data) => {
     try {
@@ -24,7 +39,10 @@ function FormValidation() {
 
       if (response.ok) {
         alert('File uploaded successfully!');
-        reset(); // Clear the form after successful upload
+        reset();
+        const updatedCount = await fetch('http://localhost:8080/files/count');
+        const countData = await updatedCount.json();
+        setFileCount(countData.count);
       } else {
         const errorText = await response.text();
         alert('Upload failed: ' + errorText);
@@ -36,68 +54,89 @@ function FormValidation() {
   };
 
   return (
-    <div className="upload-form">
-      <h2>Upload Study Material (Validated)</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="main-content">
 
-        <input
-          type="text"
-          placeholder="Title"
-          {...register('title', { required: 'Title is required' })}
-        />
-        {errors.title && <p style={{ color: 'red' }}>{errors.title.message}</p>}
+      {/* left panel */}
+      <div class="left-panel">
+        <div class="left-card welcome">
+          <h3>Welcome</h3>
+          <p>Welcome to the Dashboard</p>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Course Code (e.g., CSE-221)"
-          {...register('courseCode', { required: 'Course Code is required' })}
-        />
-        {errors.courseCode && <p style={{ color: 'red' }}>{errors.courseCode.message}</p>}
+        <div class="left-card stats">
+          <h3>📊 Dashboard</h3>
+          <p>Total Files Uploaded:</p>
+          <h1>{fileCount}</h1>
+        </div>
+      </div>
 
-        <input
-          type="text"
-          placeholder="Course Name"
-          {...register('courseName', { required: 'Course Name is required' })}
-        />
-        {errors.courseName && <p style={{ color: 'red' }}>{errors.courseName.message}</p>}
 
-        <input
-          type="text"
-          placeholder="Instructor Name"
-          {...register('instructor', { required: 'Instructor Name is required' })}
-        />
-        {errors.instructor && <p style={{ color: 'red' }}>{errors.instructor.message}</p>}
+      {/* right-panel */}
+      <div className="right-panel">
+        <div className="form-container">
+          <h2>📁 Upload Study Material</h2>
 
-        <input
-          type="text"
-          placeholder="Department"
-          {...register('department', { required: 'Department is required' })}
-        />
-        {errors.department && <p style={{ color: 'red' }}>{errors.department.message}</p>}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Title</label>
+                <input type="text" {...register('title', { required: 'Title is required' })} />
+                {errors.title && <p className="error">{errors.title.message}</p>}
+              </div>
+              <div className="form-group">
+                <label>Course Code</label>
+                <input type="text" {...register('courseCode', { required: 'Course Code is required' })} />
+                {errors.courseCode && <p className="error">{errors.courseCode.message}</p>}
+              </div>
+            </div>
 
-        <input
-          type="text"
-          placeholder="Semester (e.g., Fall 2024)"
-          {...register('semester', { required: 'Semester is required' })}
-        />
-        {errors.semester && <p style={{ color: 'red' }}>{errors.semester.message}</p>}
+            <div className="form-row">
+              <div className="form-group">
+                <label>Course Name</label>
+                <input type="text" {...register('courseName', { required: 'Course Name is required' })} />
+                {errors.courseName && <p className="error">{errors.courseName.message}</p>}
+              </div>
+              <div className="form-group">
+                <label>Instructor Name</label>
+                <input type="text" {...register('instructor', { required: 'Instructor Name is required' })} />
+                {errors.instructor && <p className="error">{errors.instructor.message}</p>}
+              </div>
+            </div>
 
-        <input
-          type="text"
-          placeholder="Tags (comma separated)"
-          {...register('tags')}
-        />
+            <div className="form-row">
+              <div className="form-group">
+                <label>Department</label>
+                <input type="text" {...register('department', { required: 'Department is required' })} />
+                {errors.department && <p className="error">{errors.department.message}</p>}
+              </div>
+              <div className="form-group">
+                <label>Semester</label>
+                <input type="text" {...register('semester', { required: 'Semester is required' })} />
+                {errors.semester && <p className="error">{errors.semester.message}</p>}
+              </div>
+            </div>
 
-        <input
-          type="file"
-          {...register('file', { required: 'Please select a file' })}
-        />
-        {errors.file && <p style={{ color: 'red' }}>{errors.file.message}</p>}
+            <div className="form-row">
+              <div className="form-group">
+                <label>Tags</label>
+                <input type="text" {...register('tags')} />
+              </div>
+              <div className="form-group">
+                <label>Select file</label>
+                <input type="file" {...register('file', { required: 'Please select a file' })} />
+                {errors.file && <p className="error">{errors.file.message}</p>}
+              </div>
+            </div>
 
-        <button type="submit">Upload</button>
-      </form>
+            <button type="submit">Upload</button>
+          </form>
+
+        </div>
+      </div>
+
     </div>
   );
+
 }
 
 export default FormValidation;
