@@ -2,8 +2,6 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-  /* background-image: url('https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1950&q=80'); */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -47,15 +45,11 @@ body::before {
   z-index: 99;
 }
 
-/* Main white card */
-.App {
-  background-color: rgba(255, 255, 255, 0.95);
-  max-width: 500px;
-  margin: 100px auto;
-  padding: 40px 30px;
-  border-radius: 14px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  position: relative;
+.main-content {
+  display: flex;
+  height: calc(100vh - 60px); /* adjust based on your header height */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* Title */
@@ -226,3 +220,201 @@ html, body, #root {
   margin-bottom: 10px;
   text-align: left;
 }
+
+ 
+/* Responsive Design for dashboard*/
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.upload-form {
+  flex: 1;
+  padding: 40px;
+}
+
+
+
+/* Left Dashboard Panel */
+.left-panel {
+  width: 25%;
+  padding: 30px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.left-card {
+  width: 100%;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.left-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.left-card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #e67e22;
+}
+
+.left-card p {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+.left-card.stats {
+  background: linear-gradient(to bottom right, #fff9e6, #ffe0b2);
+}
+
+.left-card.welcome {
+  background: linear-gradient(to bottom right, #fffdf3, #f8e9d4);
+}
+
+
+/* right Panel */
+
+.right-panel {
+  flex: 1;
+  padding: 30px 40px;
+  background: linear-gradient(to bottom right, #fdfcfb, #e2d1c3);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  padding: 30px 40px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.form-container:hover {
+  transform: translateY(-2px);
+}
+
+.form-container h2 {
+  text-align: center;
+  color: #e67e22;
+  font-size: 24px;
+  margin-bottom: 25px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+form input[type="text"],
+form input[type="file"] {
+  padding: 12px 15px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #e67e22;
+  box-shadow: 0 0 6px rgba(230, 126, 34, 0.4);
+}
+
+form button {
+  background: linear-gradient(to right, #f39c12, #e67e22);
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+form button:hover {
+  background: linear-gradient(to right, #d35400, #e67e22);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(211, 84, 0, 0.4);
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row input {
+  flex: 1;
+}
+
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.error {
+  background-color: #ffe6e6;
+  color: #d8000c;
+  border-left: 4px solid #d8000c;
+  padding: 8px 12px;
+  margin-top: 6px;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(216, 0, 12, 0.1);
+}
+
+
