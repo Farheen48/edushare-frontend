@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import './App.css'; // Use your existing CSS
 
-function UploadFormValidated() {
+function FormValidation() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
@@ -17,7 +17,7 @@ function UploadFormValidated() {
       formData.append('semester', data.semester);
       formData.append('tags', data.tags);
 
-      const response = await fetch('http://localhost:8081/files/upload', {
+      const response = await fetch('http://localhost:8080/files/upload', {
         method: 'POST',
         body: formData,
       });
@@ -100,4 +100,4 @@ function UploadFormValidated() {
   );
 }
 
-export default UploadFormValidated;
+export default FormValidation;
