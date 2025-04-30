@@ -6,11 +6,12 @@ function UploadedFilesList() {
     const [page, setPage] = useState(0); // start from 0
     const [pageSize, setPageSize] = useState(2); // Placeholder, it will come from the backend
     const [totalPages, setTotalPages] = useState(0);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 
     useEffect(() => {
         setLoading(true);
-        fetch(`http://localhost:8080/files/list?page=${page}&size=${pageSize}`)
+        fetch(`${API_BASE_URL}/files/list?page=${page}&size=${pageSize}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Backend returned:', data);
@@ -28,7 +29,7 @@ function UploadedFilesList() {
     // For Download functionality
     const handleDownload = async (fileName) => {
         try {
-            const response = await fetch(`http://localhost:8080/files/download?fileName=${fileName}`, {
+            const response = await fetch(`${API_BASE_URL}/files/download?fileName=${fileName}`, {
                 method: 'GET',
             });
 
