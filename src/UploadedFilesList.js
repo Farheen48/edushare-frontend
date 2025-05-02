@@ -95,42 +95,7 @@ function UploadedFilesList() {
                 <div>No files uploaded yet.</div>
             ) : (
                 <>
-
-
                     <div className="uploaded-files-container">
-
-                        {/* <div style={{ marginBottom: '10px' }}>
-                            <label htmlFor="pageSizeSelect">Show:&nbsp;</label>
-                            <select
-                                id="pageSizeSelect"
-                                value={pageSize}
-                                onChange={(e) => {
-                                    setPageSize(parseInt(e.target.value));
-                                    setPage(0);
-                                }}
-                            >
-                                <option value={2}>2</option>
-                                <option value={5}>5</option>
-                                <option value={10}>10</option>
-                                <option value={25}>25</option>
-                            </select>
-                            <span>&nbsp;items per page</span>
-                        </div>
-
-                        <input
-                            type="text"
-                            placeholder="Search by title, course, tags, instructor, etc."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '10px',
-                                marginBottom: '16px',
-                                border: '1px solid #ccc',
-                                borderRadius: '8px',
-                                fontSize: '16px'
-                            }}
-                        /> */}
 
                         <div style={{
                             display: 'flex',
