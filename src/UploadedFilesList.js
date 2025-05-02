@@ -11,10 +11,10 @@ function UploadedFilesList() {
     const [sortOrder, setSortOrder] = useState('asc');
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-
     useEffect(() => {
         setLoading(true);
-        fetch(`${API_BASE_URL}/files/list?page=${page}&size=${pageSize}`)
+        const queryParam = searchQuery ? `&searchTerm=${encodeURIComponent(searchQuery)}` : '';
+        fetch(`${API_BASE_URL}/files/list?page=${page}&size=${pageSize}${queryParam}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Backend returned:', data);
@@ -26,26 +26,10 @@ function UploadedFilesList() {
                 console.error('Error fetching files:', error);
                 setLoading(false);
             });
-    }, [page, pageSize]);
-
-    // Filter logic — this goes before you map files
-    const filteredFiles = files.filter(file => {
-        const query = searchQuery.toLowerCase();
-        return (
-            file.title?.toLowerCase().includes(query) ||
-            file.fileName?.toLowerCase().includes(query) ||
-            file.courseCode?.toLowerCase().includes(query) ||
-            file.courseName?.toLowerCase().includes(query) ||
-            file.instructor?.toLowerCase().includes(query) ||
-            file.semester?.toLowerCase().includes(query) ||
-            file.department?.toLowerCase().includes(query) ||
-            file.tags?.toLowerCase().includes(query) ||
-            new Date(file.uploadedAt).toLocaleString().toLowerCase().includes(query)
-        );
-    });
+    }, [page, pageSize, searchQuery]);
 
     //sorting logic
-    const sortedFiles = [...filteredFiles].sort((a, b) => {
+    const sortedFiles = [...files].sort((a, b) => {
         const aValue = a[sortField]?.toString().toLowerCase() || '';
         const bValue = b[sortField]?.toString().toLowerCase() || '';
         if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
