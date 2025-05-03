@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
-
+import { FiDownload } from 'react-icons/fi';
 function UploadedFilesList() {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(0); // start from 0
-    const [pageSize, setPageSize] = useState(2); // Placeholder, it will come from the backend
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(2);
     const [totalPages, setTotalPages] = useState(0);
-
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortField, setSortField] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc');
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
         setLoading(true);
-        fetch(`http://localhost:8080/files/list?page=${page}&size=${pageSize}`)
+        const queryParam = searchQuery ? `&searchTerm=${encodeURIComponent(searchQuery)}` : '';
+        fetch(`${API_BASE_URL}/files/list?page=${page}&size=${pageSize}${queryParam}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Backend returned:', data);
@@ -22,13 +26,31 @@ function UploadedFilesList() {
                 console.error('Error fetching files:', error);
                 setLoading(false);
             });
-    }, [page, pageSize]);
+    }, [page, pageSize, searchQuery]);
 
+    //sorting logic
+    const sortedFiles = [...files].sort((a, b) => {
+        const aValue = a[sortField]?.toString().toLowerCase() || '';
+        const bValue = b[sortField]?.toString().toLowerCase() || '';
+        if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
 
     // For Download functionality
     const handleDownload = async (fileName) => {
         try {
-            const response = await fetch(`http://localhost:8080/files/download?fileName=${fileName}`, {
+            const response = await fetch(`${API_BASE_URL}/files/download?fileName=${fileName}`, {
                 method: 'GET',
             });
 
@@ -51,74 +73,134 @@ function UploadedFilesList() {
     return (
         <div style={{ padding: '20px' }}>
             <h2>Uploaded Files</h2>
-            {loading ? (
-                <div>Loading files...</div>
-            ) : files.length === 0 ? (
-                <div>No files uploaded yet.</div>
-            ) : (
-                <>
-                    <div style={{ marginBottom: '10px' }}>
-                        <label htmlFor="pageSizeSelect">Show:&nbsp;</label>
-                        <select
-                            id="pageSizeSelect"
-                            value={pageSize}
-                            onChange={(e) => {
-                                setPageSize(parseInt(e.target.value));
-                                setPage(0); 
+            <>
+                <div className="uploaded-files-container">
+
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '16px',
+                        flexWrap: 'wrap'
+                    }}>
+                        {/* Left: Page size selector */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                            <label htmlFor="pageSizeSelect">Show:</label>
+                            <select
+                                id="pageSizeSelect"
+                                value={pageSize}
+                                onChange={(e) => {
+                                    setPageSize(parseInt(e.target.value));
+                                    setPage(0);
+                                }}
+                            >
+                                <option value={2}>2</option>
+                                <option value={5}>5</option>
+                                <option value={10}>10</option>
+                                <option value={25}>25</option>
+                            </select>
+                            <span>items per page</span>
+                        </div>
+
+                        {/* Right: Search bar */}
+                        <input
+                            type="text"
+                            placeholder="Search by title, course, tags, instructor, etc."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                width: '70%',
+                                padding: '10px',
+                                marginBottom: '16px',
+                                border: '1px solid #ccc',
+                                borderRadius: '8px',
+                                fontSize: '16px'
                             }}
-                        >
-                            <option value={2}>2</option>
-                            <option value={5}>5</option>
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                        </select>
-                        <span>&nbsp;items per page</span>
+                        />
                     </div>
 
-
-
-
-                    <table border="1" cellPadding="10" style={{ borderCollapse: 'collapse', width: '100%' }}>
+                    <table className="files-table">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Course</th>
-                                <th>Instructor</th>
-                                <th>Semester</th>
-                                <th>Department</th>
-                                <th>Tags</th>
-                                <th>Uploaded At</th>
+                                <th onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>
+                                    Title {sortField === 'title' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('fileName')} style={{ cursor: 'pointer' }}>
+                                    File name {sortField === 'fileName' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('courseName')} style={{ cursor: 'pointer' }}>
+                                    Course {sortField === 'courseName' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('instructor')} style={{ cursor: 'pointer' }}>
+                                    Instructor {sortField === 'instructor' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('semester')} style={{ cursor: 'pointer' }}>
+                                    Semester {sortField === 'semester' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('department')} style={{ cursor: 'pointer' }}>
+                                    Department {sortField === 'department' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('tags')} style={{ cursor: 'pointer' }}>
+                                    Tags {sortField === 'tags' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
+                                <th onClick={() => handleSort('uploadedAt')} style={{ cursor: 'pointer' }}>
+                                    Uploaded At {sortField === 'uploadedAt' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                </th>
                                 <th>Download</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {files.map(file => (
-                                <tr key={file.id}>
-                                    <td>{file.title}</td>
-                                    <td>{file.courseCode} - {file.courseName}</td>
-                                    <td>{file.instructor}</td>
-                                    <td>{file.semester}</td>
-                                    <td>{file.department}</td>
-                                    <td>{file.tags}</td>
-                                    <td>{new Date(file.uploadedAt).toLocaleString()}</td>
-                                    <td>
-                                        <button onClick={() => handleDownload(file.fileName)}
-                                            style={{ color: 'blue', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}>
-                                            Download
-                                        </button>
-                                    </td>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="9" style={{ textAlign: 'center' }}>Loading files...</td>
                                 </tr>
-                            ))}
+                            ) : sortedFiles.length === 0 ? (
+                                <tr>
+                                    <td colSpan="9" style={{ textAlign: 'center' }}>No files uploaded yet.</td>
+                                </tr>
+                            ) : (
+                                sortedFiles.map(file => (
+                                    <tr key={file.id}>
+                                        <td>{file.title}</td>
+                                        <td>{file.fileName}</td>
+                                        <td>{file.courseCode} - {file.courseName}</td>
+                                        <td>{file.instructor}</td>
+                                        <td>{file.semester}</td>
+                                        <td>{file.department}</td>
+                                        <td>
+                                            {file.tags.split(',').map(tag => (
+                                                <span key={tag} className="tag">{tag.trim()}</span>
+                                            ))}
+                                        </td>
+
+                                        <td>{new Date(file.uploadedAt).toLocaleString()}</td>
+                                        <td>
+                                            <button
+                                                onClick={() => handleDownload(file.fileName)}
+                                                style={{
+                                                    color: 'blue',
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    padding: 0
+                                                }}
+                                                title="Download"
+                                            >
+                                                <FiDownload size={18} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )))}
                         </tbody>
                     </table>
+                </div>
+                <div className="pagination">
+                    <button onClick={() => setPage(page - 1)} disabled={page === 0}>&laquo; Prev</button>
+                    <span>Page {page + 1} of {totalPages}</span>
+                    <button onClick={() => setPage(page + 1)} disabled={page >= totalPages - 1}>Next &raquo;</button>
+                </div>
+            </>
 
-                    <div style={{ marginTop: '20px' }}>
-                        <button disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
-                        <span style={{ margin: '0 10px' }}>Page {page + 1} of {totalPages}</span>
-                        <button disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>Next</button>
-                    </div>
-                </>
-            )}
         </div>
     );
 }

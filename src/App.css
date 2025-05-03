@@ -405,6 +405,7 @@ form button:hover {
   font-size: 14px;
 }
 
+/* form validation error block */
 .error {
   background-color: #ffe6e6;
   color: #d8000c;
@@ -418,3 +419,32 @@ form button:hover {
 }
 
 
+/* List page styles */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #163e73;
+}

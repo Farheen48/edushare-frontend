@@ -5,21 +5,47 @@ import './App.css';
 function FormValidation() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [fileCount, setFileCount] = useState(0);
+  const [userCount, setUserCount] = useState(null);
 
-  // Fetch file count from server
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+
+  // // Fetch file count from server
+  // useEffect(() => {
+  //   const fetchFileCount = async () => {
+  //     try {
+  //       const response = await fetch(`${API_BASE_URL}/files/count`);
+  //       const data = await response.json();
+  //       setFileCount(data.count);
+  //     } catch (err) {
+  //       console.error('Error fetching file count:', err);
+  //     }
+  //   };
+  //   fetchFileCount();
+  // }, [API_BASE_URL]);
+
+  // Fetch user count from server
   useEffect(() => {
-    const fetchFileCount = async () => {
+    const fetchCounts = async () => {
       try {
-        const response = await fetch('http://localhost:8080/files/count');
-        const data = await response.json();
-        setFileCount(data.count);
+        const [fileRes, userRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/files/fileCount`),
+          fetch(`${API_BASE_URL}/api/auth/userCount`)
+        ]);
+  
+        const fileData = await fileRes.json();
+        const userData = await userRes.json();
+        console.log("userData:", userData);
+  
+        setFileCount(fileData.count);
+        setUserCount(userData.count); 
       } catch (err) {
-        console.error('Error fetching file count:', err);
+        console.error('Error fetching counts:', err);
       }
     };
-    fetchFileCount();
-  }, []);
-
+    fetchCounts();
+  }, [API_BASE_URL]);
+  
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
@@ -32,7 +58,7 @@ function FormValidation() {
       formData.append('semester', data.semester);
       formData.append('tags', data.tags);
 
-      const response = await fetch('http://localhost:8080/files/upload', {
+      const response = await fetch(`${API_BASE_URL}/files/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -40,7 +66,7 @@ function FormValidation() {
       if (response.ok) {
         alert('File uploaded successfully!');
         reset();
-        const updatedCount = await fetch('http://localhost:8080/files/count');
+        const updatedCount = await fetch(`${API_BASE_URL}/files/count`);
         const countData = await updatedCount.json();
         setFileCount(countData.count);
       } else {
@@ -64,9 +90,13 @@ function FormValidation() {
         </div>
 
         <div class="left-card stats">
-          <h3>📊 Dashboard</h3>
-          <p>Total Files Uploaded:</p>
+          <h3>📊Total Files Uploaded:</h3>
           <h1>{fileCount}</h1>
+        </div>
+
+        <div class="left-card stats">
+          <h3>📊 Total Users</h3>
+          <h1>{userCount !== null ? userCount : 'Loading...'}</h1>
         </div>
       </div>
 
