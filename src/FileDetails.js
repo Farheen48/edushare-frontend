@@ -1,78 +1,141 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const mockFile = {
-  id: "1",
-  title: "Machine Learning Lecture 1",
-  uploadedBy: "Farheen",
-  uploadedAt: "2025-06-23T10:00:00Z",
-  fileSize: 5.2,
-  courseName: "Machine Learning",
-  courseCode: "CSE5001",
-  instructor: "Dr. Rafiq",
-  semester: "Summer 2025",
-  department: "Computer Science",
-  tags: "AI,ML,Supervised Learning",
-};
-
-const mockComments = [
-  { user: "Zareen", text: "Great notes!" },
-  { user: "Afiah", text: "Thanks for sharing!" },
-];
-
 function FileDetails() {
   const { id } = useParams();
   const [file, setFile] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock fetch logic
-    if (id === mockFile.id) {
-      setFile(mockFile);
-      setComments(mockComments);
-    }
+    const fetchFileDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/files/fileDetails/${id}`);
+        const data = await response.json();
+        setFile(data.fileMetadata);
+        setComments(data.comments);
+      } catch (error) {
+        console.error("Error fetching file details:", error);
+      } finally {
+        setLoading(false);
+
+        // ✅ Force layout repaint after data load
+        setTimeout(() => {
+          window.dispatchEvent(new Event("resize"));
+        }, 100);
+      }
+    };
+
+    fetchFileDetails();
   }, [id]);
 
-  const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      setComments([...comments, { user: "Anonymous", text: newComment }]);
+
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
+
+    const formData = new URLSearchParams();
+    formData.append("fileId", id);
+    formData.append("username", "Anonymous"); // or dynamic user
+    formData.append("text", newComment);
+
+    try {
+      const response = await fetch("http://localhost:8080/comments/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+      });
+
+      if (!response.ok) throw new Error("Failed to post comment");
+
+      const savedComment = await response.json();
+      setComments((prev) => [...prev, savedComment]);
       setNewComment("");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      alert("Failed to post comment. Try again.");
     }
   };
 
-  if (!file) return <p>Loading file information...</p>;
+
+  const handleDownload = async (fileName) => {
+    try {
+      const response = await fetch(`http://localhost:8080/files/download?fileName=${fileName}`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) throw new Error('Download failed');
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      alert('Error downloading file: ' + error.message);
+    }
+  };
+
+
+  if (loading) return <p>Loading file information...</p>;
+  if (!file) return <p>No file found with ID: {id}</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>📁 {file.title}</h2>
-      <p><strong>Uploaded By:</strong> {file.uploadedBy}</p>
-      <p><strong>Uploaded At:</strong> {new Date(file.uploadedAt).toLocaleString()}</p>
-      <p><strong>File Size:</strong> {file.fileSize} MB</p>
-      <p><strong>Course:</strong> {file.courseName} ({file.courseCode})</p>
-      <p><strong>Instructor:</strong> {file.instructor}</p>
-      <p><strong>Semester:</strong> {file.semester}</p>
-      <p><strong>Department:</strong> {file.department}</p>
-      <p><strong>Tags:</strong> {file.tags.split(',').map(tag => <span key={tag} style={{ marginRight: "5px" }}>#{tag.trim()}</span>)}</p>
+    <div className="file-details-wrapper">
+      <div className="file-details-layout">
+        <div className="file-card">
+          <h2>📁 {file.title}</h2>
 
-      <hr />
-      <h3>📝 Comments</h3>
-      <input
-        type="text"
-        placeholder="Write your comment..."
-        value={newComment}
-        onChange={e => setNewComment(e.target.value)}
-        style={{ width: "70%", padding: "8px" }}
-      />
-      <button onClick={handleCommentSubmit} style={{ marginLeft: "10px" }}>Post</button>
+          <div className="file-info">
+            <p><strong>Uploaded At:</strong> {new Date(file.uploadedAt).toLocaleString()}</p>
+            <p><strong>File Size:</strong> {file.fileSize} KB</p>
+            <p><strong>File Name:</strong> {file.fileName}</p>
+            <p><strong>File Type:</strong> {file.fileType}</p>
+            <p><strong>Course:</strong> {file.courseName} ({file.courseCode})</p>
+            <p><strong>Instructor:</strong> {file.instructor}</p>
+            <p><strong>Semester:</strong> {file.semester}</p>
+            <p><strong>Department:</strong> {file.department}</p>
+            <p><strong>Tags:</strong> {file.tags?.split(',').map(tag => (
+              <span key={tag} className="tag">#{tag.trim()}</span>
+            ))}</p>
+          </div>
 
-      <ul style={{ marginTop: "20px" }}>
-        {comments.map((comment, index) => (
-          <li key={index}><strong>{comment.user}:</strong> {comment.text}</li>
-        ))}
-      </ul>
+          <button className="download-button" onClick={() => handleDownload(file.fileName)}>
+            📥 Click to Download
+          </button>
+        </div>
+
+        <div className="comments-section">
+          <h3>📝 Comments</h3>
+
+          <div className="comment-box">
+            <input
+              type="text"
+              placeholder="Write your comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button onClick={handleCommentSubmit}>Post</button>
+          </div>
+          <ul className="comment-list">
+            {[...comments].reverse().map((comment) => (
+              <li key={comment.id} className="comment-item">
+                <strong>{comment.username}:</strong> {comment.text}
+                <div className="comment-time">{new Date(comment.postedAt).toLocaleString()}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
+
 }
 
 export default FileDetails;
