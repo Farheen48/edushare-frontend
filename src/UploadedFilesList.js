@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 function UploadedFilesList() {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -161,7 +162,11 @@ function UploadedFilesList() {
                             ) : (
                                 sortedFiles.map(file => (
                                     <tr key={file.id}>
-                                        <td>{file.title}</td>
+                                        <td>
+                                            <Link to={`/file/${file.id}`} style={{ textDecoration: 'none', color: '#007bff' }}>
+                                             {file.title}
+                                             </Link>
+                                         </td>
                                         <td>{file.fileName}</td>
                                         <td>{file.courseCode} - {file.courseName}</td>
                                         <td>{file.instructor}</td>
