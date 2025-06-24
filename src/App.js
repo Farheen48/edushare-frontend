@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import FormValidation from './FormValidation';
 import UploadedFilesList from './UploadedFilesList';
+import { LoginSignup } from './Components/LoginSignup/LoginSignup';
 import Header from './Header';
 import Footer from './Footer';
 import './App.css';
@@ -24,8 +25,17 @@ function LayoutWrapper({ children }) {
 function App() {
   return (
     <Router>
+      
       <div className="page-layout">
         <Header />
+        
+        <LayoutWrapper>
+          <Routes>
+            <Route path="/" element={<FormValidation />} />
+            <Route path="/files" element={<UploadedFilesList />} />
+            <Route path= "/login" element={<LoginSignup/>} />
+          </Routes>
+        </LayoutWrapper>
 
        <Routes>
   {/* Wrap only upload page with App class via LayoutWrapper */}

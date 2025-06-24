@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 
+
 function Header() {
     return (
         <header className="header" style={{ paddingLeft: '20px', paddingRight: '20px' }}>
@@ -17,9 +18,8 @@ function Header() {
                 <Link to="/">Upload</Link>
                 <Link to="/files">View Files</Link>
                 <Link to="/profile">View Profile</Link>
-
+                <Link to= "/login">Login</Link>
             </nav>
-
         </header>
     );
 }
