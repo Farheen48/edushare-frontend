@@ -1,0 +1,118 @@
+/* Centering everything on the page */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffe4b3; /* Light orange background */
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Outer box */
+.container {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+/* Heading section */
+.LogHead {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    color: #3d0c02; /* Deep orange-brown for contrast */
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Underline below heading */
+.underline {
+    width: 60px;
+    height: 4px;
+    background: #3d0c02;
+    border-radius: 2px;
+    margin-top: 5px;
+}
+
+/* Input container */
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Input row */
+.input {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 0 15px;
+    height: 50px;
+}
+
+/* Icon inside input */
+.input img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+/* Text field */
+.input input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 16px;
+}
+
+/* Forgot password text */
+.forgot-password {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.forgot-password span {
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.submit-container {
+    display: flex;
+    gap: 30px;
+    margin: 60px auto;
+    justify-content: center;
+}
+
+.submit-button {
+    background-color: #f7931e; /* UIU orange shade */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    min-width: 100px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #e67e0c; /* Slightly darker orange on hover */
+}
+
+.gray {
+    background: white;
+    color: #555;
+}
