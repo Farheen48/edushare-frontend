@@ -7,6 +7,8 @@ import Header from './Header';
 import Footer from './Footer';
 import './App.css';
 import FileDetails from './FileDetails';
+import UserProfile from './UserProfile';
+
 
 // LayoutWrapper to conditionally wrap the upload page
 function LayoutWrapper({ children }) {
@@ -60,7 +62,18 @@ function App() {
         <FileDetails />
       </LayoutWrapper>
     }
+  /> 
+  
+  {/* ✅ New Profile Route */}
+  <Route
+    path="/profile"
+    element={
+      <LayoutWrapper>
+        <UserProfile />
+      </LayoutWrapper>
+    }
   />
+  
 </Routes>
 
         <Footer />

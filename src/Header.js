@@ -17,9 +17,9 @@ function Header() {
             <nav style={{ paddingLeft: '20px', paddingRight: '100px' }}>
                 <Link to="/">Upload</Link>
                 <Link to="/files">View Files</Link>
+                <Link to="/profile">View Profile</Link>
                 <Link to= "/login">Login</Link>
             </nav>
-
         </header>
     );
 }
