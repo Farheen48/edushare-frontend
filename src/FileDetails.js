@@ -83,6 +83,24 @@ function FileDetails() {
   };
 
 
+  const handleDelete = async (commentId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this comment?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/comments/delete/${commentId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete");
+
+      setComments(prev => prev.filter(c => c.id !== commentId));
+    } catch (err) {
+      alert("Failed to delete comment.");
+      console.error(err);
+    }
+  };
+
   if (loading) return <p>Loading file information...</p>;
   if (!file) return <p>No file found with ID: {id}</p>;
 
@@ -123,11 +141,18 @@ function FileDetails() {
             />
             <button onClick={handleCommentSubmit}>Post</button>
           </div>
+      
           <ul className="comment-list">
             {[...comments].reverse().map((comment) => (
               <li key={comment.id} className="comment-item">
-                <strong>{comment.username}:</strong> {comment.text}
-                <div className="comment-time">{new Date(comment.postedAt).toLocaleString()}</div>
+                <div className="comment-content">
+                  <div>
+                    <strong>{comment.username}:</strong> {comment.text}
+                    <div className="comment-time">{new Date(comment.postedAt).toLocaleString()}</div>
+                  </div>
+                  {/* <button className="delete-button" onClick={() => handleDelete(comment.id)}>❌ Delete</button> */}
+                  <button className="delete-button" onClick={() => handleDelete(comment.id)}>🗑️</button>
+                </div>
               </li>
             ))}
           </ul>
@@ -135,7 +160,6 @@ function FileDetails() {
       </div>
     </div>
   );
-
 }
 
 export default FileDetails;
